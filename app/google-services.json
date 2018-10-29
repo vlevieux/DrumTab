@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "965642778400",
+    "firebase_url": "https://drumtab-f848e.firebaseio.com",
+    "project_id": "drumtab-f848e",
+    "storage_bucket": "drumtab-f848e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965642778400:android:e2770b5a55a7ed44",
+        "android_client_info": {
+          "package_name": "com.vlevieux.drumtab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965642778400-9ksoiqrjo50of64ec548gtflro26j32b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlevieux.drumtab",
+            "certificate_hash": "dca9b87b8f69c50acb71a127d46faeb026348bca"
+          }
+        },
+        {
+          "client_id": "965642778400-q5fslu6qjuvv52dfrharfdvr5t2ld69i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc7AKAj_rwGawju-UVKdIgoJN9SMpxA-c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965642778400-q5fslu6qjuvv52dfrharfdvr5t2ld69i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

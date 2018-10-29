@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/main_iv_album"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@android:color/holo_orange_dark" />
+
+    <TextView
+        android:id="@+id/main_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/main_iv_album"
+        android:text="Band Name - Music Name"
+        android:layout_toEndOf="@id/main_iv_album" />
+
+    <TextView
+        android:id="@+id/main_tv_more_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/main_iv_album"
+        android:layout_below="@id/main_tv_name"
+        android:text="More Information"
+        android:layout_toEndOf="@id/main_iv_album" />
+
+    <ProgressBar
+        android:id="@+id/main_pb_download"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/main_ib_favorite"
+        android:layout_toStartOf="@id/main_ib_favorite" />
+
+    <ImageButton
+        android:id="@+id/main_ib_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="Favorite" />
+</RelativeLayout>
