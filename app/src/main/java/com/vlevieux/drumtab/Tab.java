@@ -31,4 +31,8 @@ class Tab {
             + "ArtistName : " + artistName + " "
             + "BPM : " + bpm);
     }
+
+    public int getId(){
+        return this.id;
+    }
 }
