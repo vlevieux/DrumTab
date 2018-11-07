@@ -1,14 +1,10 @@
 package com.vlevieux.drumtab;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public class TabActivity extends AppCompatActivity {
 
@@ -17,21 +13,11 @@ public class TabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance("gs://drumtab-f848e.appspot.com");
-        StorageReference gsReference = storage.getReferenceFromUrl("gs://drumtab-f848e.appspot.com/test_01.tab");
-
-        long test = 467;
-        gsReference.getBytes(test).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Data for "images/island.jpg" is returns, use this as needed
-                Log.d("ELEPHANT", new String(bytes));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+        //Testing tab class
+        InputStream is = new ByteArrayInputStream( "<score-partwise><work><work-title>Test 01</work-title></work><identification><creator type=\"composer\">DrumTab</creator></identification><part id=\"P1\"><measure number=\"1\"><attributes><divisions>960</divisions><time><beats>4</beats><beat-type>4</beat-type></time></attributes><direction placement=\"above\"><sound tempo=\"120\" /></direction><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>960</duration><type>quarter</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>4</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>38</fret><string>4</string></technical></notations><duration>480</duration><type>eighth</type></note><note><rest /><duration>960</duration><type>quarter</type></note></measure><measure number=\"2\"><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>960</duration><type>quarter</type><chord /></note><note><notations><technical><fret>38</fret><string>4</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>4</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>43</fret><string>5</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>41</fret><string>5</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note></measure></part></score-partwise>".getBytes() );
+        Tab tab = new Tab(is);
+        tab.setSongName("Test_01");
+        tab.setArtistName("Drum Tab");
+        tab.setId(1);
     }
 }

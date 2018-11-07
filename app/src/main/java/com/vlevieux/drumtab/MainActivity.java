@@ -42,7 +42,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //new Tab();
+
+        //For tab activity test
+        //Intent i = new Intent(getBaseContext(), TabActivity.class);
+        //startActivity(i);
+
         drumTabs = new ArrayList<>();
         tabList = findViewById(R.id.main_lv_tabs);
 
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         //attaching value event listener
         databaseDrumTabs.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 //iterating through all the nodes
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
