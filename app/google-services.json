@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:965642778400:android:686c21df3afda4b5",
+        "android_client_info": {
+          "package_name": "com.example.mypackage.adddrumtab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965642778400-kc94h5am6eprjoftedjs7eagtid7omeb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mypackage.adddrumtab",
+            "certificate_hash": "5b0b7ce6d3881ab7bdb84aef2994146ae7b62e37"
+          }
+        },
+        {
+          "client_id": "965642778400-q5fslu6qjuvv52dfrharfdvr5t2ld69i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc7AKAj_rwGawju-UVKdIgoJN9SMpxA-c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965642778400-q5fslu6qjuvv52dfrharfdvr5t2ld69i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:965642778400:android:e2770b5a55a7ed44",
         "android_client_info": {
           "package_name": "com.vlevieux.drumtab"
@@ -20,6 +64,14 @@
           "android_info": {
             "package_name": "com.vlevieux.drumtab",
             "certificate_hash": "dca9b87b8f69c50acb71a127d46faeb026348bca"
+          }
+        },
+        {
+          "client_id": "965642778400-bhmf3iv84fvq90lg3pk2gcdud25jk23t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vlevieux.drumtab",
+            "certificate_hash": "5b0b7ce6d3881ab7bdb84aef2994146ae7b62e37"
           }
         },
         {

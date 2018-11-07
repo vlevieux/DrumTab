@@ -1,5 +1,6 @@
 package com.vlevieux.drumtab;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,45 +32,57 @@ public class MainActivity extends AppCompatActivity {
 
     protected ListView tabList;
 
-    public class ListAdapter extends ArrayAdapter<Tab> {
+    //a list to store all the artist from firebase database
+    List<DrumTab> drumTabs;
 
-        int resourceLayout;
-        Context context;
-        ListAdapter(Context context, int resource, List<Tab> tabs) {
-            super(context, resource, tabs);
-            this.resourceLayout = resource;
-            this.context = context;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            View v = convertView;
-            if (v == null) {
-                LayoutInflater vi;
-                vi = LayoutInflater.from(context);
-                v = vi.inflate(resourceLayout, null);
-            }
-            Tab p = getItem(position);
-            TextView name = v.findViewById(R.id.main_tv_name);
-            TextView info = v.findViewById(R.id.main_tv_more_info);
-            name.setText("Sum 41");
-            info.setText("BPM 150");
-            return v;
-        }
-    }
+    //our database reference object
+    DatabaseReference databaseDrumTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new Tab();
+        //new Tab();
+        drumTabs = new ArrayList<>();
+        tabList = findViewById(R.id.main_lv_tabs);
 
-        Intent intent = new Intent(this, TabActivity.class);
-        startActivity(intent);
+        //getting the reference of artists node
+        databaseDrumTabs = FirebaseDatabase.getInstance().getReference("drumTabs");
+
+        //Intent intent = new Intent(this, TabActivity.class);
+        //startActivity(intent);
 
         generateToolBar();
-        generateTabListView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //attaching value event listener
+        databaseDrumTabs.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //iterating through all the nodes
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    //getting artist
+                    DrumTab artist = postSnapshot.getValue(DrumTab.class);
+                    //adding artist to the list
+                    drumTabs.add(artist);
+                }
+
+                //creating adapter
+                DrumTabList drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs);
+                //attaching adapter to the listview
+                tabList.setAdapter(drumTabAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     protected void generateToolBar() {
@@ -74,12 +95,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    protected void generateTabListView(){
-        this.tabList = findViewById(R.id.main_lv_tabs);
-        ListAdapter customAdapter = new ListAdapter(this, R.layout.row, Arrays.asList(new Tab(), new Tab(),new Tab()));
-        tabList.setAdapter(customAdapter);
     }
 
     public void startSettingActivity(MenuItem item) {
