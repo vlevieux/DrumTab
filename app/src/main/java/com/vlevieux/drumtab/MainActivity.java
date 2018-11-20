@@ -1,22 +1,14 @@
 package com.vlevieux.drumtab;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     //our database reference object
     DatabaseReference databaseDrumTabs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +49,21 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(intent);
 
         generateToolBar();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+
         //attaching value event listener
         databaseDrumTabs.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                //clear list to avoid duplicates whenever the activity start
+                drumTabs.clear();
 
                 //iterating through all the nodes
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
@@ -105,4 +102,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
+
 }

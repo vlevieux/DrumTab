@@ -3,11 +3,14 @@ package com.vlevieux.drumtab;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import java.util.List;
 
@@ -38,9 +41,25 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        DrumTab drumTab = drumTabs.get(position);
+        final DrumTab drumTab = drumTabs.get(position);
         TextView name = v.findViewById(R.id.main_tv_name);
         TextView info = v.findViewById(R.id.main_tv_more_info);
+
+        ImageButton imageButton = v.findViewById(R.id.main_ib_favorite);
+
+
+        imageButton.setOnClickListener(new VideoView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                SqlHelper db = new SqlHelper(context);
+                db.addDrumTab(new DrumTab(drumTab.getArtistName(), drumTab.getSongName(),
+                        "Toast", "Toast"));
+
+
+            }
+        });
+
 
         name.setText(drumTab.getArtistName() + " - " + drumTab.getSongName());
         info.setText("Rating?");
