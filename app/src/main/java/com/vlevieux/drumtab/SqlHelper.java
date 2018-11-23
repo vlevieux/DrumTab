@@ -10,10 +10,13 @@ import android.util.Log;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ *  @author thomas THEBAUD, 11/19/2018
+ */
 public class SqlHelper extends SQLiteOpenHelper{
 
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "drumTabs";
@@ -91,7 +94,7 @@ public class SqlHelper extends SQLiteOpenHelper{
         Cursor cursor = db.rawQuery(query, null);
 
         // 3. go over each row, build book and add it to list
-        DrumTab drumTab = null;
+        DrumTab drumTab;
 
         if (cursor.moveToFirst()) {
             do {
@@ -118,9 +121,8 @@ public class SqlHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         // 2. delete
-        db.delete(TABLE_DRUMTABS,
-                KEY_ID+" = ?",
-                new String[] { String.valueOf(drumTab.getDrumTabId()) });
+        db.delete(TABLE_DRUMTABS, KEY_ARTIST + " = ? AND " + KEY_SONG +" =?",
+                new String[] { drumTab.getArtistName(), drumTab.getSongName() });
 
         // 3. close
         db.close();

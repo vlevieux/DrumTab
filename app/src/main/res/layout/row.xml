@@ -42,5 +42,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="Favorite"
-        android:onClick="addToFavorite"/>
+        android:src="@drawable/star"
+        android:background="#00ffffff" />
 </RelativeLayout>
