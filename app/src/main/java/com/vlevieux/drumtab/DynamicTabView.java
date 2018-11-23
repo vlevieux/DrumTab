@@ -15,30 +15,30 @@ import java.util.List;
 
 public class DynamicTabView extends View {
 
-    public static List<Shape> shapes = new ArrayList<>();
+    public List<Shape> shapes = new ArrayList<>();
 
     public int width;
     public int height;
 
     public DynamicTabView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        Log.d("TAB_VIEW", "DynamicTabView created");
     }
 
-    public DynamicTabView(Context context){
-        super(context);
-    }
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         this.width = w;
         this.height = h;
-        Log.d("TAB_VIEW", "Width" + String.valueOf(this.width));
+        Log.d("TAB_VIEW", "DynamicTabView size changed : Width : " + String.valueOf(this.width)+" Height : "+String.valueOf(this.height));
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        int width = 30000 + 50; // Since 3000 is bottom of last Rect to be drawn added and 50 for padding.
+
+        // TODO: Calculate Width according to the tab
+        int width = 30000 + 50;
         setMeasuredDimension(width, height);
     }
 
@@ -46,15 +46,19 @@ public class DynamicTabView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Log.d("TAB_VIEW", "on drawing");
-        //Log.d("TAB_VIEW", "#Shapes :"+String.valueOf(DynamicTabThread.shapes));
+        Log.d("TAB_VIEW", "DynamicTabView Status : On Drawing");
+
+        Log.d("TAB_VIEW", "DynamicTabView Status : On Drawing Background");
         drawBackground(canvas);
+
+        // TODO: Move the creation of shape
         for (int i=0; i<10; i++) {
             shapes.add(new Shape(1, i, this.height, this.width));
         }
+
+        Log.d("TAB_VIEW", "DynamicTabView Status : On Drawing Shapes["+String.valueOf(this.shapes.size())+"]");
         for (Shape shape : this.shapes){
             Log.d("TAB_VIEW", String.valueOf(shape.y) + " " + String.valueOf(shape.x) + " "+ String.valueOf(shape.width));
-            //if (shape.y>0 & shape.y<width)
                 canvas.drawRect(shape.y, shape.x, shape.y+shape.width,shape.x+shape.height, shape.paint);
         }
     }
@@ -86,6 +90,6 @@ class Shape {
         this.width = (2 * height) / 15;
         this.height = (2 * height) / 15;
         paint.setColor(Color.RED);
-        Log.d("TAB_SHAPE", String.valueOf(this.y)+" "+String.valueOf(this.x)+" "+String.valueOf(this.width)+" "+String.valueOf(this.height)+" ");
+        Log.d("TAB_SHAPE", "YXWHC :" + String.valueOf(this.y)+" "+String.valueOf(this.x)+" "+String.valueOf(this.width)+" "+String.valueOf(this.height)+String.valueOf(Color.RED));
     }
 }
