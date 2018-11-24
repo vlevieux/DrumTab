@@ -38,7 +38,6 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
     private int resourceLayout;
     private Context context;
     private List<DrumTab> drumTabs;
-    private ProgressBar progressBar;
 
 
     public DrumTabList(Context context, int resource, List<DrumTab> drumTabs) {
@@ -63,7 +62,7 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         TextView name = v.findViewById(R.id.main_tv_name);
         TextView info = v.findViewById(R.id.main_tv_more_info);
 
-        progressBar = v.findViewById(R.id.main_pb_download);
+        final ProgressBar progressBar = v.findViewById(R.id.main_pb_download);
 
         final ImageButton imageButton = v.findViewById(R.id.main_ib_favorite);
 
@@ -92,21 +91,18 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
                 //Set the button's appearance
                 imageButton.setSelected(!imageButton.isSelected());
 
-                progressBar.setIndeterminate(true);
-                progressBar.setProgress(0);
-                progressBar.setVisibility(View.GONE);
 
                 SqlHelper db = new SqlHelper(context);
 
                 DownloadTask downloadTaskXML = new DownloadTask(context, ".xml",
-                        drumTab.getDrumTabId());
+                        drumTab.getDrumTabId(), progressBar);
 
                 DownloadTask downloadTaskTAB = new DownloadTask(context, ".tab",
-                        drumTab.getDrumTabId());
+                        drumTab.getDrumTabId(), progressBar);
 
                 if (imageButton.isSelected()) {
 
-
+                    progressBar.setVisibility(View.VISIBLE);
                     // execute this when the downloader must be fired
 
                     downloadTaskXML.execute(drumTab.getXml());
@@ -146,11 +142,13 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         private PowerManager.WakeLock wakeLock;
         private String extension;
         private String drumTabId;
+        private ProgressBar pB;
 
-        public DownloadTask(Context context, String extension, String drumTabId) {
+        public DownloadTask(Context context, String extension, String drumTabId, ProgressBar pB) {
             this.context = context;
             this.extension= extension;
             this.drumTabId = drumTabId;
+            this.pB = pB;
         }
 
         @Override
@@ -239,14 +237,12 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         protected void onProgressUpdate(Integer... progress) {
             super.onProgressUpdate(progress);
             // if we get here, length is known, now set indeterminate to false
-            progressBar.setIndeterminate(false);
-            progressBar.setMax(100);
         }
 
         @Override
         protected void onPostExecute(String result) {
             wakeLock.release();
-            progressBar.setVisibility(View.GONE);
+            pB.setVisibility(View.INVISIBLE);
             if (result != null)
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
             else

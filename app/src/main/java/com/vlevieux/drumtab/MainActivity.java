@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("LastTest", drumTab.toString());
             }
 
-            drumTabs = new ArrayList<>();
+            drumTabs.clear();
             drumTabs.addAll(s);
             //Now the List has only the identical Elements
 
