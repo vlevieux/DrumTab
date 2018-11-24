@@ -104,10 +104,10 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
                 DownloadTask downloadTaskTAB = new DownloadTask(context, ".tab",
                         drumTab.getDrumTabId(), progressBar);
 
+                boolean alreadyInFavorite = false;
 
                 if (!isSelected) {
 
-                    boolean alreadyInFavorite = false;
 
                     for(DrumTab dT: db.getAllDrumTab()){
                         if(dT.getSongName().equals(drumTab.getSongName())
@@ -139,6 +139,8 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
 
                 } else {
 
+                    alreadyInFavorite = false;
+                    
                     //Delete files
                     File fileXML = new File("/storage/emulated/0/drumTabs/drumTab" + drumTab.getDrumTabId() + ".xml");
                     fileXML.delete();
@@ -155,6 +157,7 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
 
                     imageButton.setBackgroundResource(R.drawable.button_normal);
                     isSelected = false;
+
                 }
 
 
