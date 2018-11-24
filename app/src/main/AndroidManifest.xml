@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingActivity" />
-        <activity android:name=".TabActivity"></activity>
+        <activity android:name=".TabActivity" android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

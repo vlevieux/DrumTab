@@ -18,6 +18,8 @@ class Tab {
     private String songName = "";
     private String artistName = "";
     private int bpm = 120;
+    private int measures = 0;
+    private int divisions = 960;
     private ArrayList<Note> partition = new ArrayList<>();
 
     Tab(InputStream is) {
@@ -43,6 +45,12 @@ class Tab {
                             break;
                         case "creator":
                             setArtistName(parser.nextText());
+                            break;
+                        case "divisions":
+                            setDivisions(Integer.valueOf(parser.nextText()));
+                            break;
+                        case "measure":
+                            setMeasures(Integer.valueOf(parser.getAttributeValue(null, "number")));
                             break;
                         case "sound":
                             setBpm(Integer.valueOf(parser.getAttributeValue(null, "tempo")));
@@ -160,15 +168,57 @@ class Tab {
      * Set BPM
      * @param bpm BPM (must be positive)
      */
-    private void setBpm(int bpm){
+    public void setBpm(int bpm){
         if (bpm>0)
             this.bpm = bpm;
+    }
+
+    /**
+     * Set # of measure
+     * @param number # of measure (must be positive)
+     */
+    public void setMeasures(int number) {
+        if (number > 0){
+            this.measures = number;
+        }
+    }
+
+    /**
+     * Get # of measure
+     * @return # of measure
+     */
+    public int getMeasures(){
+        return this.measures;
+    }
+
+    /**
+     * Set Divisions Size
+     * @param divisions Divisions
+     */
+    public void setDivisions(int divisions){
+        this.divisions = divisions;
+    }
+
+    /**
+     * Get Devisions Size
+     * @return Divisions Size
+     */
+    public int getDivisions(){
+        return this.divisions;
+    }
+
+    /**
+     * Get Partition
+     * @return partition
+     */
+    public ArrayList<Note> getPartition(){
+        return this.partition;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "Tab("+this.getId()+","+this.getSongName()+","+this.getArtistName()+","+this.getBpm()+")";
+        return "Tab("+this.getId()+","+this.getSongName()+","+this.getArtistName()+","+this.getBpm()+","+this.getMeasures()+","+this.getDivisions()+")";
     }
 }
 
