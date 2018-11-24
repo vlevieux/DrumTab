@@ -1,6 +1,7 @@
 package com.vlevieux.drumtab;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
@@ -26,6 +27,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * @author thomas THEBAUD, 11/6/2018
  *
@@ -37,12 +40,14 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
     private List<DrumTab> drumTabs;
     private ProgressBar progressBar;
 
+
     public DrumTabList(Context context, int resource, List<DrumTab> drumTabs) {
         super(context, resource, drumTabs);
         this.resourceLayout = resource;
         this.context = context;
         this.drumTabs = drumTabs;
     }
+
 
     @NonNull
     @Override
@@ -63,6 +68,23 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         final ImageButton imageButton = v.findViewById(R.id.main_ib_favorite);
 
 
+        name.setText(drumTab.getArtistName() + " - " + drumTab.getSongName());
+        info.setText("Rating?");
+
+
+        Log.d("XMLCharAt", drumTab.toString());
+        Log.d("XMLCharAT", "" + drumTab.getXml().charAt(0));
+
+        if(drumTab.getXml().charAt(0) == '/'){
+            //Set the button's appearance
+            imageButton.setSelected(imageButton.isSelected());
+        }
+        if(drumTab.getXml().charAt(0) != 'h'){
+            //Set the button's appearance
+            imageButton.setSelected(!imageButton.isSelected());
+        }
+
+
         imageButton.setOnClickListener(new VideoView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,24 +98,33 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
 
                 SqlHelper db = new SqlHelper(context);
 
+                DownloadTask downloadTaskXML = new DownloadTask(context, ".xml",
+                        drumTab.getDrumTabId());
+
+                DownloadTask downloadTaskTAB = new DownloadTask(context, ".tab",
+                        drumTab.getDrumTabId());
+
                 if (imageButton.isSelected()) {
 
-                    // execute this when the downloader must be fired
-                    DownloadTask downloadTaskXML = new DownloadTask(context, ".xml");
-                    downloadTaskXML.execute(drumTab.getXml());
 
-                    DownloadTask downloadTaskTAB = new DownloadTask(context, ".tab");
+                    // execute this when the downloader must be fired
+
+                    downloadTaskXML.execute(drumTab.getXml());
                     downloadTaskTAB.execute(drumTab.getTab());
 
                     db.addDrumTab(new DrumTab(drumTab.getArtistName(), drumTab.getSongName(),
-                            "Test", "Test"));
+                            "/storage/emulated/0/drumTabs/drumTab" + drumTab.getDrumTabId() + ".xml",
+                            "/storage/emulated/0/drumTabs/drumTab" + drumTab.getDrumTabId() + ".tab"));
 
                 } else {
 
-                    File fileXML = new File("/storage/emulated/0/drumTabs/test01.xml");
+                    //Delete files
+                    File fileXML = new File("/storage/emulated/0/drumTabs/drumTab" + drumTab.getDrumTabId() + ".xml");
                     fileXML.delete();
-                    File fileTAB = new File("/storage/emulated/0/drumTabs/test01.tab");
+                    File fileTAB = new File("/storage/emulated/0/drumTabs/drumTab" + drumTab.getDrumTabId() + ".tab");
                     fileTAB.delete();
+
+                    Toast.makeText(context, "Deleted from favorite", Toast.LENGTH_LONG).show();
 
                     Log.d("Button", db.getAllDrumTab().toString());
 
@@ -105,9 +136,6 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
 
             }
         });
-
-        name.setText(drumTab.getArtistName() + " - " + drumTab.getSongName());
-        info.setText("Rating?");
         return v;
     }
 
@@ -117,11 +145,12 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         private Context context;
         private PowerManager.WakeLock wakeLock;
         private String extension;
+        private String drumTabId;
 
-
-        public DownloadTask(Context context, String extension) {
+        public DownloadTask(Context context, String extension, String drumTabId) {
             this.context = context;
             this.extension= extension;
+            this.drumTabId = drumTabId;
         }
 
         @Override
@@ -156,7 +185,9 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
                     f.mkdirs();
                 }
                 input = connection.getInputStream();
-                output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + folder_main + "/test01" + extension);
+                output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/"
+                        + folder_main + "/drumTab" + drumTabId + extension);
+
 
                 Log.d("PathTest", Environment.getExternalStorageDirectory() + "/" + folder_main + "/test01" + extension);
 
@@ -219,10 +250,8 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
             if (result != null)
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
             else
-                Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Added to favorite", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 }
 

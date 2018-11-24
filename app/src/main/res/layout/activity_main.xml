@@ -21,22 +21,23 @@
 
         <EditText
             android:id="@+id/main_et_search"
-            android:layout_width="0dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/main_search"
-            android:inputType="text"
-            android:autofillHints="" />
+            android:inputType="text" />
 
         <ImageButton
-            android:id="@+id/main_btn_cancel"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:id="@+id/main_ib_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:src="@drawable/ic_cancel_black_24dp"
+            android:src="@drawable/button_search"
             android:background="@null"
-            android:contentDescription="@string/main_btn_cancel" />
+            android:contentDescription="@string/main_btn_search"
+            android:onClick="search"/>
     </LinearLayout>
 
     <ListView

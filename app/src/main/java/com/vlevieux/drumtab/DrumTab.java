@@ -12,6 +12,7 @@ public class DrumTab {
     private String xml;
     private String tab;
 
+
     public DrumTab(){
     }
 
@@ -20,6 +21,24 @@ public class DrumTab {
         this.songName = songName;
         this.xml = xml;
         this.tab = tab;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return (this.artistName.hashCode() + this.songName.hashCode()
+                + this.tab.hashCode() + this.xml.hashCode() + this.drumTabId.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof DrumTab){
+            DrumTab temp = (DrumTab) obj;
+            if(this.songName.equals(temp.songName) && this.artistName.equals(temp.artistName)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -4,18 +4,25 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.icu.text.LocaleDisplayNames;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -33,7 +40,15 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Set;
+
+import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,8 +59,14 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private EditText querySearch;
+
+    SqlHelper db = new SqlHelper(MainActivity.this);
+
     //a list to store all the artist from firebase database
-    List<DrumTab> drumTabs;
+    private List<DrumTab> drumTabs;
+    private DrumTabList drumTabAdapter;
+    private boolean listIsEmpty;
 
     //our database reference object
     DatabaseReference databaseDrumTabs;
@@ -70,39 +91,56 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(intent);
 
         generateToolBar();
+
+        querySearch = findViewById(R.id.main_et_search);
+        ImageButton searchButton = findViewById(R.id.main_ib_search);
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        //attaching value event listener
-        databaseDrumTabs.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if(db.getAllDrumTab().isEmpty()){
+            databaseDrumTabs.addValueEventListener(new ValueEventListener() {
 
-                //clear list to avoid duplicates whenever the activity start
-                drumTabs.clear();
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //iterating through all the nodes
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    //getting artist
-                    DrumTab artist = postSnapshot.getValue(DrumTab.class);
-                    //adding artist to the list
-                    drumTabs.add(artist);
+                    drumTabs.clear();
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        //getting artist
+                        DrumTab drumTab = postSnapshot.getValue(DrumTab.class);
+                        //adding artist to the list
+                        drumTabs.add(drumTab);
+                    }
+
+                    //creating adapter
+                    drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs);
+                    //attaching adapter to the listview
+                    tabList.setAdapter(drumTabAdapter);
                 }
 
-                //creating adapter
-                DrumTabList drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs);
-                //attaching adapter to the listview
-                tabList.setAdapter(drumTabAdapter);
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else{
+
+            drumTabs.clear();
+
+            for(DrumTab drumTab : db.getAllDrumTab()){
+                drumTabs.add(drumTab);
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+            //creating adapter
+            drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs);
+            //attaching adapter to the listview
+            tabList.setAdapter(drumTabAdapter);
+        }
     }
 
     protected void generateToolBar() {
@@ -134,6 +172,140 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+    public void searchInSqlLiteDatabase(){
+
+        Log.d("LastTest", "Before For Loop 1");
+        for(DrumTab drumTab : db.getDrumTab(querySearch.getText().toString().toLowerCase())){
+            drumTabs.add(drumTab);
+            listIsEmpty = false;
+            Log.d("LastTest", drumTab.toString());
+        }
+    }
+
+    public void search(View v){
+
+        //clear list
+        drumTabs.clear();
+        listIsEmpty = true;
+
+        searchInSqlLiteDatabase();
+        searchInFirebaseDatabase(querySearch.getText().toString().toLowerCase());
+    }
+
+    public void searchInFirebaseDatabase(final String querySearch){
+
+        databaseDrumTabs = FirebaseDatabase.getInstance().getReference("drumTabs");
+
+        //attaching value event listener
+        databaseDrumTabs.orderByChild("artistName").startAt(querySearch)
+                .endAt(querySearch + "\uf8ff")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        Log.d("LastTest", "Before For Loop 2.1");
+                        //iterating through all the nodes
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            //getting artist
+                            DrumTab drumTab = postSnapshot.getValue(DrumTab.class);
+                            //adding artist to the list
+                            drumTabs.add(drumTab);
+                            listIsEmpty = false;
+
+                            Log.d("LastTest", drumTab.toString());
+                        }
+
+                        //attaching value event listener
+                        databaseDrumTabs.orderByChild("songName").startAt(querySearch)
+                                .endAt(querySearch + "\uf8ff")
+                                .addValueEventListener(new ValueEventListener() {
+
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                        Log.d("LastTest", "Before For Loop 2.2");
+                                        //iterating through all the nodes
+                                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                            //getting artist
+                                            DrumTab drumTab = postSnapshot.getValue(DrumTab.class);
+                                            //adding artist to the list
+                                            drumTabs.add(drumTab);
+                                            listIsEmpty = false;
+
+                                            Log.d("LastTest", drumTab.toString());
+                                        }
+
+                                        updateTabList();
+                                    }
+
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+    }
+
+    public void updateTabList() {
+
+        if (listIsEmpty) {
+
+            //get all favorites from SqlLite Database
+            for (DrumTab drumTab : db.getAllDrumTab()) {
+                drumTabs.add(drumTab);
+            }
+
+            Log.d("LastTest", "Empty");
+            //updateAdapter
+            Toast.makeText(MainActivity.this, "No result", Toast.LENGTH_SHORT).show();
+
+        } else {
+            Log.d("LastTest", "Not Empty");
+
+            Log.d("LastTest", "With duplicates");
+            for(DrumTab drumTab : drumTabs){
+                Log.d("LastTest", drumTab.toString());
+            }
+            //Removing Duplicates;
+            Set<DrumTab> s = new LinkedHashSet<>();
+            s.addAll(drumTabs);
+
+            Log.d("LastTest", "Without Duplicates");
+            for(DrumTab drumTab : s){
+                Log.d("LastTest", drumTab.toString());
+            }
+
+            drumTabs = new ArrayList<>();
+            drumTabs.addAll(s);
+            //Now the List has only the identical Elements
+
+            Log.d("LastTest", "Without Duplicates");
+            for(DrumTab drumTab : drumTabs){
+                Log.d("LastTest", drumTab.toString());
+            }
+
+            Toast.makeText(MainActivity.this, drumTabAdapter.getCount() + " results", Toast.LENGTH_SHORT).show();
+        }
+
+        Log.d("LastTest", "Final List");
+        for(DrumTab drumTab : drumTabs){
+            Log.d("LastTest", drumTab.toString());
+        }
+
+        Log.d("LastTest", "tabList" + String.valueOf(tabList.getAdapter().getCount()));
+        Log.d("LastTest", "adapter" + String.valueOf(drumTabAdapter.getCount()));
+        drumTabAdapter.notifyDataSetChanged();
+        tabList.invalidateViews();
+
+
     }
 
 }

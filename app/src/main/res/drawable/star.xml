@@ -4,6 +4,6 @@
     <item android:state_pressed="true"
         android:drawable="@drawable/button_pressed" /> <!-- pressed -->
     <item android:state_selected="true"
-        android:drawable="@drawable/button_selected" /> <!-- focused -->
+        android:drawable="@drawable/button_selected" /> <!-- selected -->
     <item android:drawable="@drawable/button_normal" /> <!-- default -->
 </selector>
