@@ -15,8 +15,6 @@ import java.util.List;
 
 public class DynamicTabView extends View {
 
-    public List<Shape> shapes = new ArrayList<>();
-
     public int width;
     public int height;
 
@@ -30,15 +28,21 @@ public class DynamicTabView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         this.width = w;
         this.height = h;
-        Log.d("TAB_VIEW", "DynamicTabView size changed : Width : " + String.valueOf(this.width)+" Height : "+String.valueOf(this.height));
+        Log.d("TAB_VIEW", "Size changed : Width : " + String.valueOf(this.width)+" Height : "+String.valueOf(this.height));
+
+        // TODO: Resize Shape
+        for(Shape shape : TabActivity.shapes){
+            shape.resize(h,w);
+        }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
 
+        Log.d("TAB_VIEW", "onMeasure");
         // TODO: Calculate Width according to the tab
-        int width = 30000 + 50;
+        int width = ((2*16 * height) / 15)+((10*2*height)/15);
         setMeasuredDimension(width, height);
     }
 
@@ -46,19 +50,14 @@ public class DynamicTabView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Log.d("TAB_VIEW", "DynamicTabView Status : On Drawing");
+        Log.d("TAB_VIEW", "Status : On Drawing");
 
-        Log.d("TAB_VIEW", "DynamicTabView Status : On Drawing Background");
+        Log.d("TAB_VIEW", "Status : On Drawing Background");
         drawBackground(canvas);
 
-        // TODO: Move the creation of shape
-        for (int i=0; i<10; i++) {
-            shapes.add(new Shape(1, i, this.height, this.width));
-        }
-
-        Log.d("TAB_VIEW", "DynamicTabView Status : On Drawing Shapes["+String.valueOf(this.shapes.size())+"]");
-        for (Shape shape : this.shapes){
-            Log.d("TAB_VIEW", String.valueOf(shape.y) + " " + String.valueOf(shape.x) + " "+ String.valueOf(shape.width));
+        Log.d("TAB_VIEW", "Status : On Drawing Shapes["+String.valueOf(TabActivity.shapes.size())+"]");
+        for (Shape shape : TabActivity.shapes){
+            Log.d("TAB_View", "Drawing Shape (YXWHC) : " + String.valueOf(shape.y)+" "+String.valueOf(shape.x)+" "+String.valueOf(shape.width)+" "+String.valueOf(shape.height)+" "+String.format("#%06X", 0xFFFFFF & shape.paint.getColor()));
                 canvas.drawRect(shape.y, shape.x, shape.y+shape.width,shape.x+shape.height, shape.paint);
         }
     }
@@ -78,18 +77,29 @@ public class DynamicTabView extends View {
 }
 
 class Shape {
+    int vertical_position;
+    int horizontal_position;
     float x;
     float y;
     float width;
     float height;
     Paint paint = new Paint();
 
-    Shape(int vertical_position, int horizontal_position, int height, int width){
+    Shape(int vertical_position, int horizontal_position, int height, int width, int c){
+        this.vertical_position = vertical_position;
+        this.horizontal_position = horizontal_position;
         this.x = ((2*height)/15) + (vertical_position*height)/5;
         this.y = ((2*height)/15) * horizontal_position*2;
         this.width = (2 * height) / 15;
         this.height = (2 * height) / 15;
-        paint.setColor(Color.RED);
-        Log.d("TAB_SHAPE", "YXWHC :" + String.valueOf(this.y)+" "+String.valueOf(this.x)+" "+String.valueOf(this.width)+" "+String.valueOf(this.height)+String.valueOf(Color.RED));
+        paint.setColor(c);
+        Log.d("TAB_SHAPE", "YXWHC : " + String.valueOf(this.y)+" "+String.valueOf(this.x)+" "+String.valueOf(this.width)+" "+String.valueOf(this.height)+" "+String.format("#%06X", 0xFFFFFF & paint.getColor()));
+    }
+
+    public void resize(int height, int width){
+        this.x = ((2*height)/15) + (vertical_position*height)/5;
+        this.y = ((2*height)/15) * horizontal_position*2;
+        this.width = (2 * height) / 15;
+        this.height = (2 * height) / 15;
     }
 }

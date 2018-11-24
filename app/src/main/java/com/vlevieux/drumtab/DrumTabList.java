@@ -62,7 +62,6 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
 
         final ImageButton imageButton = v.findViewById(R.id.main_ib_favorite);
 
-
         imageButton.setOnClickListener(new VideoView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -207,6 +206,7 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         @Override
         protected void onProgressUpdate(Integer... progress) {
             super.onProgressUpdate(progress);
+            Log.d("TEST1234", "Update");
             // if we get here, length is known, now set indeterminate to false
             progressBar.setIndeterminate(false);
             progressBar.setMax(100);

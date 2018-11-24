@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         verifyStoragePermissions(MainActivity.this);
         //For tab activity test
-        Intent i = new Intent(getBaseContext(), TabActivity.class);
-        startActivity(i);
+        //Intent i = new Intent(getBaseContext(), TabActivity.class);
+        //startActivity(i);
 
         drumTabs = new ArrayList<>();
         tabList = findViewById(R.id.main_lv_tabs);
