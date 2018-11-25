@@ -30,7 +30,6 @@ public class DynamicTabView extends View {
         this.height = h;
         Log.d("TAB_VIEW", "Size changed : Width : " + String.valueOf(this.width)+" Height : "+String.valueOf(this.height));
 
-        // TODO: Resize Shape
         for(Shape shape : TabActivity.shapes){
             shape.resize(h,w);
         }
@@ -42,7 +41,7 @@ public class DynamicTabView extends View {
 
         Log.d("TAB_VIEW", "onMeasure");
         // TODO: Calculate Width according to the tab
-        int width = ((2*16 * height) / 15)+((10*2*height)/15);
+        int width = ((2*16*7 * height) / 15)+((10*2*height)/15)+((16*2*height)/15);
         setMeasuredDimension(width, height);
     }
 

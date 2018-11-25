@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
 
 import java.io.ByteArrayInputStream;
@@ -19,6 +20,8 @@ public class TabActivity extends AppCompatActivity {
     HorizontalScrollView hsw;
     ObjectAnimator animator;
 
+    private Tab tab;
+
     public static List<Shape> shapes = new ArrayList<>();
 
     @Override
@@ -30,13 +33,17 @@ public class TabActivity extends AppCompatActivity {
         hsw = findViewById(R.id.tab_hsw_tab);
 
         //Testing tab class
-        InputStream is = new ByteArrayInputStream( "<score-partwise><work><work-title /></work><identification><creator type=\"composer\" /></identification><part id=\"P1\"><measure number=\"1\"><attributes><divisions>960</divisions><time><beats>4</beats><beat-type>4</beat-type></time></attributes><direction placement=\"above\"><sound tempo=\"120\" /></direction><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>42</fret><string>3</string></technical></notations><duration>960</duration><type>quarter</type><chord /></note><note><notations><technical><fret>38</fret><string>5</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>42</fret><string>3</string></technical></notations><duration>960</duration><type>quarter</type><chord /></note><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>3</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>36</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>5</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>49</fret><string>3</string></technical></notations><duration>960</duration><type>quarter</type><chord /></note></measure></part></score-partwise>".getBytes() );
-        Tab tab = new Tab(is);
+        InputStream is = new ByteArrayInputStream( "<score-partwise><work><work-title /></work><identification><creator type=\"composer\" /></identification><part id=\"P1\"><measure number=\"1\"><attributes><divisions>960</divisions><time><beats>4</beats><beat-type>4</beat-type></time></attributes><direction placement=\"above\"><sound tempo=\"116\" /></direction><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>960</duration><type>quarter</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>960</duration><type>quarter</type></note></measure><measure number=\"2\"><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note></measure><measure number=\"3\"><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note></measure><measure number=\"4\"><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note></measure><measure number=\"5\"><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note></measure><measure number=\"6\"><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note></measure><measure number=\"7\"><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>38</fret><string>6</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note><note><notations><technical><fret>42</fret><string>2</string></technical></notations><duration>480</duration><type>eighth</type></note><note><notations><technical><fret>36</fret><string>7</string></technical></notations><duration>480</duration><type>eighth</type><chord /></note></measure></part></score-partwise>".getBytes() );
 
-        Log.d("TAB_ACTIVITY", tab.toString());
 
+        tab = new Tab(is);
+        Log.d("TAB_TAB", "Creating tab : " + tab.toString());
+
+        generateShapes();
+    }
+
+    private void generateShapes(){
         int c = 0;
-        int i = 0;
         int vertical_position = 0;
         int horizontal_position = 5;
         for(Note note : tab.getPartition()){
@@ -65,34 +72,31 @@ public class TabActivity extends AppCompatActivity {
                     vertical_position = 0;
                     break;
             }
-
-            Log.d("TAB_SHAPE_DEBUG", String.valueOf(horizontal_position));
             TabActivity.shapes.add(new Shape(vertical_position, horizontal_position, 100, 100, c));
-            i++;
             horizontal_position += 2*note.getDuration()/tab.getDivisions();
-
         }
-
-
-
-        tab.setSongName("Test_01");
-        tab.setSongName("Test_02");
-        tab.setArtistName("Drum Tab");
-        tab.setId(1);
-
     }
 
     public void playTab(View view) {
-        // TODO: Calculate duration
-        int duration = 30000;
-        this.animator = ObjectAnimator.ofInt(hsw, "scrollX",duration );
+        int duration = (int)(((float)(1000*60*tab.getMeasures()*4+(10+16))) / (float)tab.getBpm());
+        Log.d("TAB_ANIMATION", "Total Duration : " + String.valueOf(duration));
+        this.animator = ObjectAnimator.ofInt(hsw, "scrollX",dtv.getWidth()-hsw.getWidth());
+        this.animator.setInterpolator(new LinearInterpolator());
         Log.d("TAB_ANIMATION", "Starting Auto-Scrollig, total duration : " + String.valueOf(duration/1000));
         this.animator.setDuration(duration);
         this.animator.start();
     }
 
     public void previousTab(View view) {
-        this.animator.cancel();
+        if (animator != null)
+            this.animator.cancel();
         hsw.scrollTo(0,0);
+    }
+
+    public void finishTab(View view) {
+        if (animator != null)
+            this.animator.cancel();
+        Log.d("TAB_ACTIVITY", "Tab is finished");
+        this.finish();
     }
 }

@@ -35,7 +35,9 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
     private int resourceLayout;
     private Context context;
     private List<DrumTab> drumTabs;
-    private ProgressBar progressBar;
+
+    //private ProgressBar pB2;
+
 
     public DrumTabList(Context context, int resource, List<DrumTab> drumTabs) {
         super(context, resource, drumTabs);
@@ -58,7 +60,7 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         TextView name = v.findViewById(R.id.main_tv_name);
         TextView info = v.findViewById(R.id.main_tv_more_info);
 
-        progressBar = v.findViewById(R.id.main_pb_download);
+        final ProgressBar progressBar = v.findViewById(R.id.main_pb_download);
 
         final ImageButton imageButton = v.findViewById(R.id.main_ib_favorite);
 
@@ -77,16 +79,16 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
 
                 if (imageButton.isSelected()) {
 
+                    progressBar.setVisibility(View.VISIBLE);
                     // execute this when the downloader must be fired
-                    DownloadTask downloadTaskXML = new DownloadTask(context, ".xml");
+                    DownloadTask downloadTaskXML = new DownloadTask(context, ".xml", progressBar);
                     downloadTaskXML.execute(drumTab.getXml());
 
-                    DownloadTask downloadTaskTAB = new DownloadTask(context, ".tab");
+                    DownloadTask downloadTaskTAB = new DownloadTask(context, ".tab", progressBar);
                     downloadTaskTAB.execute(drumTab.getTab());
 
                     db.addDrumTab(new DrumTab(drumTab.getArtistName(), drumTab.getSongName(),
                             "Test", "Test"));
-
                 } else {
 
                     File fileXML = new File("/storage/emulated/0/drumTabs/test01.xml");
@@ -117,10 +119,12 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         private PowerManager.WakeLock wakeLock;
         private String extension;
 
+        private ProgressBar pB;
 
-        public DownloadTask(Context context, String extension) {
+        public DownloadTask(Context context, String extension, ProgressBar pB) {
             this.context = context;
             this.extension= extension;
+            this.pB = pB;
         }
 
         @Override
@@ -169,6 +173,7 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
                         return null;
                     }
                     total += count;
+
                     // publishing the progress....
                     if (fileLength > 0) // only if total length is known
                         publishProgress((int) (total * 100 / fileLength));
@@ -206,16 +211,17 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
         @Override
         protected void onProgressUpdate(Integer... progress) {
             super.onProgressUpdate(progress);
+            //pB2.setProgress(progress[0]);
             Log.d("TEST1234", "Update");
             // if we get here, length is known, now set indeterminate to false
-            progressBar.setIndeterminate(false);
-            progressBar.setMax(100);
+            //pB.setIndeterminate(false);
+            //pB.setMax(100);
         }
 
         @Override
         protected void onPostExecute(String result) {
             wakeLock.release();
-            progressBar.setVisibility(View.GONE);
+            pB.setVisibility(View.INVISIBLE);
             if (result != null)
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
             else
