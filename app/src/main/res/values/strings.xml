@@ -2,5 +2,5 @@
     <string name="app_name">DrumTab</string>
     <string name="menu_main_setting">Setting</string>
     <string name="main_search">Search</string>
-    <string name="main_btn_cancel">Cancel Button</string>
+    <string name="main_btn_search">Cancel Button</string>
 </resources>
