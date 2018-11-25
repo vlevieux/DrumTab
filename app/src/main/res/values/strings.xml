@@ -3,4 +3,12 @@
     <string name="menu_main_setting">Setting</string>
     <string name="main_search">Search</string>
     <string name="main_btn_search">Cancel Button</string>
+    <string name="add_to_favorite">Add To Favorite</string>
+    <string name="play_tab">Play Tab</string>
+    <string name="previous_tab">Previous Tab</string>
+    <string name="go_to_previous_activity">Go to previous activity</string>
+    <string name="crash">Crash</string>
+    <string name="hi_hat">Hi Hat</string>
+    <string name="snare">Snare</string>
+    <string name="kick">Kick</string>
 </resources>
