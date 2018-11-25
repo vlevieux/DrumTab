@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -52,24 +53,23 @@ import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected ListView tabList;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    protected ListView tabList;
     private EditText querySearch;
+    private ProgressBar progressBarHorizontal;
+    private ImageButton searchButton;
 
     SqlHelper db = new SqlHelper(MainActivity.this);
+    DatabaseReference databaseDrumTabs;
 
-    //a list to store all the artist from firebase database
-    private List<DrumTab> drumTabs;
+    private ArrayList<DrumTab> drumTabs;
     private DrumTabList drumTabAdapter;
     private boolean listIsEmpty;
-
-    //our database reference object
-    DatabaseReference databaseDrumTabs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,26 +77,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         verifyStoragePermissions(MainActivity.this);
-        //For tab activity test
-        //Intent i = new Intent(getBaseContext(), TabActivity.class);
-        //startActivity(i);
 
         drumTabs = new ArrayList<>();
         tabList = findViewById(R.id.main_lv_tabs);
+        progressBarHorizontal = findViewById(R.id.main_pb_download_horizontal);
+        progressBarHorizontal.setVisibility(View.INVISIBLE);
+        querySearch = findViewById(R.id.main_et_search);
+        searchButton = findViewById(R.id.main_ib_search);
+        generateToolBar();
 
         //getting the reference of artists node
         databaseDrumTabs = FirebaseDatabase.getInstance().getReference("drumTabs");
 
-        //Intent intent = new Intent(this, TabActivity.class);
-        //startActivity(intent);
-
-        generateToolBar();
-
-        querySearch = findViewById(R.id.main_et_search);
-        ImageButton searchButton = findViewById(R.id.main_ib_search);
     }
 
-
+    /**
+     * At the start of the activity, display all the favorites.
+     * If there are not, display all the firebase database.
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -108,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     drumTabs.clear();
-
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         //getting artist
                         DrumTab drumTab = postSnapshot.getValue(DrumTab.class);
@@ -117,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     //creating adapter
-                    drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs);
+                    drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs, progressBarHorizontal);
                     //attaching adapter to the listview
                     tabList.setAdapter(drumTabAdapter);
                 }
@@ -131,13 +128,12 @@ public class MainActivity extends AppCompatActivity {
         else{
 
             drumTabs.clear();
-
             for(DrumTab drumTab : db.getAllDrumTab()){
                 drumTabs.add(drumTab);
             }
 
             //creating adapter
-            drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs);
+            drumTabAdapter = new DrumTabList(MainActivity.this, R.layout.row, drumTabs, progressBarHorizontal);
             //attaching adapter to the listview
             tabList.setAdapter(drumTabAdapter);
         }
@@ -174,26 +170,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void searchInSqlLiteDatabase(){
+    /**
+     * SQL query to find drumTab
+     */
+    public void searchInSqlLiteDatabase(String querySearch){
 
         Log.d("LastTest", "Before For Loop 1");
-        for(DrumTab drumTab : db.getDrumTab(querySearch.getText().toString().toLowerCase())){
+        for(DrumTab drumTab : db.getDrumTab(querySearch)){
             drumTabs.add(drumTab);
             listIsEmpty = false;
             Log.d("LastTest", drumTab.toString());
         }
     }
 
+    /**
+     * OnClickListener for the searchButton
+     * @param v, view
+     */
     public void search(View v){
 
         //clear list
         drumTabs.clear();
         listIsEmpty = true;
-
-        searchInSqlLiteDatabase();
+        searchInSqlLiteDatabase(querySearch.getText().toString().toLowerCase());
         searchInFirebaseDatabase(querySearch.getText().toString().toLowerCase());
     }
 
+    /**
+     * Firbase query to find drumTab
+     * @param querySearch, string from the editText used for the search
+     */
     public void searchInFirebaseDatabase(final String querySearch){
 
         databaseDrumTabs = FirebaseDatabase.getInstance().getReference("drumTabs");
@@ -236,24 +242,23 @@ public class MainActivity extends AppCompatActivity {
 
                                             Log.d("LastTest", drumTab.toString());
                                         }
-
                                         updateTabList();
                                     }
-
-
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
                                     }
-
                                 });
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
                 });
     }
 
+    /**
+     * Delete duplicates and update listView with the result from the queries
+     * If the queries return null, then display favorites
+     */
     public void updateTabList() {
 
         if (listIsEmpty) {
@@ -264,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Log.d("LastTest", "Empty");
-            //updateAdapter
             Toast.makeText(MainActivity.this, "No result", Toast.LENGTH_SHORT).show();
 
         } else {
@@ -277,15 +281,8 @@ public class MainActivity extends AppCompatActivity {
             //Removing Duplicates;
             Set<DrumTab> s = new LinkedHashSet<>();
             s.addAll(drumTabs);
-
-            Log.d("LastTest", "Without Duplicates");
-            for(DrumTab drumTab : s){
-                Log.d("LastTest", drumTab.toString());
-            }
-
             drumTabs.clear();
             drumTabs.addAll(s);
-            //Now the List has only the identical Elements
 
             Log.d("LastTest", "Without Duplicates");
             for(DrumTab drumTab : drumTabs){
@@ -300,12 +297,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("LastTest", drumTab.toString());
         }
 
-        Log.d("LastTest", "tabList" + String.valueOf(tabList.getAdapter().getCount()));
-        Log.d("LastTest", "adapter" + String.valueOf(drumTabAdapter.getCount()));
+        //update listView
         drumTabAdapter.notifyDataSetChanged();
         tabList.invalidateViews();
-
-
     }
-
 }

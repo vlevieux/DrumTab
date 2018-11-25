@@ -11,16 +11,17 @@ public class DrumTab {
     private String songName;
     private String xml;
     private String tab;
-
+    private String isFavorite;
 
     public DrumTab(){
     }
 
-    public DrumTab(String artistName, String songName, String xml, String tab) {
+    public DrumTab(String artistName, String songName, String xml, String tab, String isFavorite) {
         this.artistName = artistName;
         this.songName = songName;
         this.xml = xml;
         this.tab = tab;
+        this.isFavorite = isFavorite;
     }
 
 
@@ -34,9 +35,9 @@ public class DrumTab {
     public boolean equals(Object obj) {
         if(obj instanceof DrumTab){
             DrumTab temp = (DrumTab) obj;
-            if(this.songName.equals(temp.songName) && this.artistName.equals(temp.artistName)){
+            if(this.songName.equals(temp.songName) && this.artistName.equals(temp.artistName))
                 return true;
-            }
+
         }
         return false;
     }
@@ -44,7 +45,15 @@ public class DrumTab {
     @Override
     public String toString() {
         return "DrumTab [id=" + drumTabId + ", artist=" + artistName + ", song=" + songName
-                + ", xml=" + xml + ", tab=" + tab + "]\n";
+                + ", xml=" + xml + ", tab=" + tab + ",favorite=" + isFavorite + "]\n";
+    }
+
+    public String getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(String isFavorite) {
+        this.isFavorite = isFavorite;
     }
 
     public String getDrumTabId() {

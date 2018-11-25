@@ -15,7 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/main_iv_album"
-        android:text="Band Name - Music Name"
         android:layout_toEndOf="@id/main_iv_album" />
 
     <TextView
@@ -24,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/main_iv_album"
         android:layout_below="@id/main_tv_name"
-        android:text="More Information"
         android:layout_toEndOf="@id/main_iv_album" />
 
     <ProgressBar
@@ -42,6 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:contentDescription="Favorite"
+        android:focusable="false"
         android:background="#00ffffff" />
 </RelativeLayout>

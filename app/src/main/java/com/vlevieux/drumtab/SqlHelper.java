@@ -16,7 +16,7 @@ import java.util.List;
 public class SqlHelper extends SQLiteOpenHelper{
 
     // Database Version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // Database Name
     private static final String DATABASE_NAME = "drumTabs";
@@ -30,6 +30,7 @@ public class SqlHelper extends SQLiteOpenHelper{
     private static final String KEY_SONG = "song";
     private static final String KEY_XML = "xml";
     private static final String KEY_TAB = "tab";
+    private static final String KEY_FAVORITE = "favorite";
 
     public SqlHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,7 +45,8 @@ public class SqlHelper extends SQLiteOpenHelper{
                 "artist TEXT, "+
                 "song TEXT, "+
                 "xml TEXT, "+
-                "tab TEXT )";
+                "tab TEXT, "+
+                "favorite TEXT )";
 
         //create drumtrabs table
         db.execSQL((CREATE_DRUMTABS_TABLE));
@@ -72,6 +74,7 @@ public class SqlHelper extends SQLiteOpenHelper{
         values.put(KEY_SONG, drumTab.getSongName());
         values.put(KEY_XML, drumTab.getXml());
         values.put(KEY_TAB, drumTab.getTab());
+        values.put(KEY_FAVORITE, drumTab.getIsFavorite());
 
         // 3. insert
         db.insert(TABLE_DRUMTABS, // table
@@ -104,15 +107,17 @@ public class SqlHelper extends SQLiteOpenHelper{
                 drumTab.setSongName(cursor.getString(2));
                 drumTab.setXml(cursor.getString(3));
                 drumTab.setTab(cursor.getString(4));
+                drumTab.setIsFavorite(cursor.getString(5));
 
                 // Add book to books
                 drumTabs.add(drumTab);
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
         Log.d("getAllDrumTabs()", drumTabs.toString());
 
-        return drumTabs; // return books
+        return drumTabs;
     }
 
     // Get All Books
@@ -140,12 +145,14 @@ public class SqlHelper extends SQLiteOpenHelper{
                 drumTab.setSongName(cursor.getString(2));
                 drumTab.setXml(cursor.getString(3));
                 drumTab.setTab(cursor.getString(4));
+                drumTab.setIsFavorite(cursor.getString(5));
 
                 // Add book to books
                 drumTabs.add(drumTab);
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
         Log.d("TestSearch", drumTabs.toString());
 
         return drumTabs; // return books
