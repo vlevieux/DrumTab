@@ -116,26 +116,19 @@ class Tab {
      * Return the name of the song
      * @return name of the song
      */
-    public String getSongName(){return this.songName;}
+    String getSongName(){return this.songName;}
 
     /**
      * Return the artist's name
      * @return name of the artist
      */
-    public String getArtistName(){return this.artistName;}
+    String getArtistName(){return this.artistName;}
 
     /**
      * Return BPM
      * @return beats per minute
      */
-    public int getBpm(){return this.bpm;}
-
-    /**
-     * Return note at position
-     * @param pos position of the note in partition
-     * @return return Note at position in partition
-     */
-    public Note getNote(int pos){return this.partition.get(pos);}
+    int getBpm(){return this.bpm;}
 
     /**
      * Set Id of tab
@@ -150,7 +143,7 @@ class Tab {
      * Set song's name
      * @param songName song's name (must be non null)
      */
-    void setSongName(String songName){
+    private void setSongName(String songName){
         if (songName.length()>0)
             this.songName = songName;
     }
@@ -159,7 +152,7 @@ class Tab {
      * Set the artist's name
      * @param artistName artist's name (must be non null)
      */
-    void setArtistName(String artistName){
+    private void setArtistName(String artistName){
         if (artistName.length()>0)
             this.artistName = artistName;
     }
@@ -168,7 +161,7 @@ class Tab {
      * Set BPM
      * @param bpm BPM (must be positive)
      */
-    public void setBpm(int bpm){
+    private void setBpm(int bpm){
         if (bpm>0)
             this.bpm = bpm;
     }
@@ -177,7 +170,7 @@ class Tab {
      * Set # of measure
      * @param number # of measure (must be positive)
      */
-    public void setMeasures(int number) {
+    private void setMeasures(int number) {
         if (number > 0){
             this.measures = number;
         }
@@ -187,7 +180,7 @@ class Tab {
      * Get # of measure
      * @return # of measure
      */
-    public int getMeasures(){
+    int getMeasures(){
         return this.measures;
     }
 
@@ -195,7 +188,7 @@ class Tab {
      * Set Divisions Size
      * @param divisions Divisions
      */
-    public void setDivisions(int divisions){
+    private void setDivisions(int divisions){
         this.divisions = divisions;
     }
 
@@ -203,7 +196,7 @@ class Tab {
      * Get Devisions Size
      * @return Divisions Size
      */
-    public int getDivisions(){
+    int getDivisions(){
         return this.divisions;
     }
 
@@ -211,7 +204,7 @@ class Tab {
      * Get Partition
      * @return partition
      */
-    public ArrayList<Note> getPartition(){
+    ArrayList<Note> getPartition(){
         return this.partition;
     }
 
@@ -231,12 +224,6 @@ class Note{
     private final int[] possibleValue = {36,38,42,46,49};
 
     Note(){}
-
-    Note(int value, int duration, boolean chord){
-        this.value = value;
-        this.duration = duration;
-        this.chord = chord;
-    }
 
     /**
      * Set note's value
@@ -275,7 +262,7 @@ class Note{
      * Return note's duration
      * @return note's duration
      */
-    public int getDuration(){
+    int getDuration(){
         return this.duration;
     }
 
@@ -283,7 +270,7 @@ class Note{
      * Return if is note is in a chord
      * @return true if in chord else false
      */
-    public boolean isChord() {
+    boolean isChord() {
         return this.chord;
     }
 
