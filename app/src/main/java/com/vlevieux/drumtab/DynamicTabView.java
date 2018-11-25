@@ -1,7 +1,6 @@
 package com.vlevieux.drumtab;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,9 +8,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DynamicTabView extends View {
 
@@ -36,7 +32,7 @@ public class DynamicTabView extends View {
         Log.d("TAB_VIEW", "Size changed : Width : " + String.valueOf(this.width)+" Height : "+String.valueOf(this.height));
 
         for(Shape shape : TabActivity.shapes){
-            shape.resize(h,w);
+            shape.resize(h);
         }
     }
 
@@ -79,8 +75,8 @@ public class DynamicTabView extends View {
 }
 
 class Shape {
-    int vertical_position;
-    int horizontal_position;
+    private int vertical_position;
+    private int horizontal_position;
     float x;
     float y;
     float width;
@@ -98,7 +94,7 @@ class Shape {
         Log.d("TAB_SHAPE", "YXWHC : " + String.valueOf(this.y)+" "+String.valueOf(this.x)+" "+String.valueOf(this.width)+" "+String.valueOf(this.height)+" "+String.format("#%06X", 0xFFFFFF & paint.getColor()));
     }
 
-    public void resize(int height, int width){
+    void resize(int height){
         this.x = ((2*height)/15) + (vertical_position*height)/5;
         this.y = ((2*height)/15) * horizontal_position*2;
         this.width = (2 * height) / 15;
