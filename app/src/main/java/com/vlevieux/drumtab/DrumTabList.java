@@ -68,6 +68,7 @@ public class DrumTabList extends ArrayAdapter<DrumTab> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, TabActivity.class);
+                intent.putExtra("PATH", "test");
                 context.startActivity(intent);
             }
         });
