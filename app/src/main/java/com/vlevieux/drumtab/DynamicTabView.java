@@ -17,10 +17,15 @@ public class DynamicTabView extends View {
 
     public int width;
     public int height;
+    private int tabWidth = 1;
 
     public DynamicTabView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         Log.d("TAB_VIEW", "DynamicTabView created");
+    }
+
+    public void setTabWidth(int tabWidth){
+        this.tabWidth = tabWidth;
     }
 
     @Override
@@ -38,10 +43,8 @@ public class DynamicTabView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int height = MeasureSpec.getSize(heightMeasureSpec);
-
-        Log.d("TAB_VIEW", "onMeasure");
-        // TODO: Calculate Width according to the tab
-        int width = ((2*16*7 * height) / 15)+((10*2*height)/15)+((16*2*height)/15);
+        int width = ((2*16*tabWidth * height) / 15)+((10*2*height)/15)+((16*2*height)/15);
+        Log.d("TAB_VIEW", "Calculate new width : " + String.valueOf(width));
         setMeasuredDimension(width, height);
     }
 

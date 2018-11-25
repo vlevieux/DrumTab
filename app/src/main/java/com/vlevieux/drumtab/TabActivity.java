@@ -68,6 +68,7 @@ public class TabActivity extends AppCompatActivity {
         tab = new Tab(is);
         Log.d("TAB_TAB", "Creating tab : " + tab.toString());
 
+        dtv.setTabWidth(tab.getMeasures());
         infoTv.setText(String.format("%s - %s", tab.getArtistName(), tab.getSongName()));
 
         generateShapes();
