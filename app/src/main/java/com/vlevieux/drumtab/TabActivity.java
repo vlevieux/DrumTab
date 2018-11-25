@@ -48,7 +48,7 @@ public class TabActivity extends AppCompatActivity {
         tabPath= getIntent().getStringExtra("PATH");
 
         //Testing Path
-        tabPath = "/mnt/sdcard/drumTabs/drumTabtest_01drum tab.xml";
+        //tabPath = "/mnt/sdcard/drumTabs/drumTabtest_01drum tab.xml";
 
         File tabFile = new File(tabPath);
         Log.d("TAB_TAB", "Tab Path : " + tabPath);
