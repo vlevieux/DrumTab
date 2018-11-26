@@ -62,7 +62,7 @@ public class DynamicTabView extends View {
 
     protected void drawBackground(Canvas canvas){
         Paint paintBG = new Paint();
-        paintBG.setColor(Color.LTGRAY);
+        paintBG.setColor(Color.WHITE);
         paintBG.setStyle(Paint.Style.FILL);
         canvas.drawPaint(paintBG);
 

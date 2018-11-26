@@ -14,17 +14,20 @@
 
         <ImageButton
             android:id="@+id/tab_btn_finish_activity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_menu_back"
             android:onClick="finishTab"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/go_to_previous_activity" />
 
         <TextView
             android:id="@+id/tab_tv_song_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:textSize="24dp"
             android:layout_weight="1" />
 
         <ImageButton
@@ -34,6 +37,7 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_media_previous"
             android:onClick="previousTab"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/previous_tab" />
 
         <ImageButton
@@ -43,6 +47,7 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_media_play"
             android:onClick="playTab"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/play_tab" />
 
         <ImageButton
@@ -52,13 +57,16 @@
             android:layout_weight="1"
             app:srcCompat="@drawable/button_normal"
             android:onClick="addToFavorite"
-            android:contentDescription="@string/add_to_favorite" />
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/add_to_favorite"
+            android:tag="notAdded" />
 
         <Button
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:color/transparent"
             android:text="@string/share" />
     </LinearLayout>
 

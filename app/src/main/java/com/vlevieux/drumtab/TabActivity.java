@@ -43,26 +43,12 @@ public class TabActivity extends AppCompatActivity {
         infoTv = findViewById(R.id.tab_tv_song_info);
         addToFavoriteBtn = findViewById(R.id.tab_btn_add_to_favorite);
 
-
         tabPath= getIntent().getStringExtra("PATH");
 
         //Testing Path
         //tabPath = "/mnt/sdcard/drumTabs/drumTabtest_01drum tab.xml";
-
-        File tabFile = new File(tabPath);
-        Log.d("TAB_TAB", "Tab Path : " + tabPath);
-
         updateFavoriteBtn();
-
-        InputStream is = null;
-        try {
-            is = new FileInputStream(tabFile);
-        } catch (FileNotFoundException e) {
-            Toast.makeText(this, "Tab not found",
-                    Toast.LENGTH_LONG).show();
-            finish();
-            e.printStackTrace();
-        }
+        InputStream is = readFile(tabPath);
 
         tab = new Tab(is);
         Log.d("TAB_TAB", "Creating tab : " + tab.toString());
@@ -71,6 +57,22 @@ public class TabActivity extends AppCompatActivity {
         infoTv.setText(String.format("%s - %s", tab.getArtistName(), tab.getSongName()));
 
         generateShapes();
+    }
+
+    private InputStream readFile(String tabPath){
+        File tabFile = new File(tabPath);
+        Log.d("TAB_TAB", "Tab Path : " + tabPath);
+        InputStream is = null;
+        try {
+            is = new FileInputStream(tabFile);
+            return is;
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "Tab not found",
+                    Toast.LENGTH_LONG).show();
+            finish();
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void generateShapes(){
@@ -134,11 +136,20 @@ public class TabActivity extends AppCompatActivity {
     public void updateFavoriteBtn(){
         if(tabPath.charAt(0)=='/') {
             addToFavoriteBtn.setImageResource(R.drawable.button_pressed);
+            addToFavoriteBtn.setTag("Added");
         }else{
             addToFavoriteBtn.setImageResource(R.drawable.button_normal);
+            addToFavoriteBtn.setTag("notAdded");
         }
     }
 
     public void addToFavorite(View view) {
+        if(addToFavoriteBtn.getTag().equals("notAdded")) {
+            addToFavoriteBtn.setImageResource(R.drawable.button_pressed);
+            addToFavoriteBtn.setTag("Added");
+        }else{
+            addToFavoriteBtn.setImageResource(R.drawable.button_normal);
+            addToFavoriteBtn.setTag("notAdded");
+        }
     }
 }
