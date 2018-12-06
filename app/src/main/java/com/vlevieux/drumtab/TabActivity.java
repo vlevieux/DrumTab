@@ -12,6 +12,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,6 +37,8 @@ public class TabActivity extends AppCompatActivity {
     private Tab tab;
     private String tabPath;
 
+    InputStream is;
+
     public static List<Shape> shapes = new ArrayList<>();
 
     @Override
@@ -44,19 +52,43 @@ public class TabActivity extends AppCompatActivity {
         addToFavoriteBtn = findViewById(R.id.tab_btn_add_to_favorite);
 
         tabPath= getIntent().getStringExtra("PATH");
-
         //Testing Path
         //tabPath = "/mnt/sdcard/drumTabs/drumTabtest_01drum tab.xml";
         updateFavoriteBtn();
-        InputStream is = readFile(tabPath);
+        if (tabPath.charAt(0)=='h') {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference httpsReference = storage.getReferenceFromUrl(tabPath);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    is = new ByteArrayInputStream(bytes);
 
-        tab = new Tab(is);
-        Log.d("TAB_TAB", "Creating tab : " + tab.toString());
+                    tab = new Tab(is);
+                    Log.d("TAB_TAB", "Creating tab : " + tab.toString());
 
-        dtv.setTabWidth(tab.getMeasures());
-        infoTv.setText(String.format("%s - %s", tab.getArtistName(), tab.getSongName()));
+                    dtv.setTabWidth(tab.getMeasures());
+                    infoTv.setText(String.format("%s - %s", tab.getArtistName(), tab.getSongName()));
 
-        generateShapes();
+                    generateShapes();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } else {
+            is = readFile(tabPath);
+
+            tab = new Tab(is);
+            Log.d("TAB_TAB", "Creating tab : " + tab.toString());
+
+            dtv.setTabWidth(tab.getMeasures());
+            infoTv.setText(String.format("%s - %s", tab.getArtistName(), tab.getSongName()));
+
+            generateShapes();
+        }
     }
 
     private InputStream readFile(String tabPath){
